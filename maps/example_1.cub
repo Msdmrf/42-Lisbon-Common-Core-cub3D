@@ -1,0 +1,13 @@
+NO ./north.xpm
+SO ./south.xpm
+WE ./west.xpm
+EA ./east.xpm
+
+F 0,0,0
+C 0,0,0
+
+11111
+1N001
+10101
+10001
+11111
