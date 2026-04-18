@@ -38,8 +38,8 @@ static int	check_player_spawn(t_game *game)
 	int	count;
 
 	count = 0;
-	i = 0;
-	while (i < game->map.height)
+	i = -1;
+	while (++i < game->map.height)
 	{
 		j = 0;
 		while (game->map.grid[i][j])
@@ -50,10 +50,10 @@ static int	check_player_spawn(t_game *game)
 				game->player.x = j + 0.5;
 				game->player.y = i + 0.5;
 				game->player.spawn_dir = game->map.grid[i][j];
+				game->player.angle = convert_angle(game->player.spawn_dir);
 			}
 			j++;
 		}
-		i++;
 	}
 	if (count != 1)
 		return (ft_putendl_fd("Error\nExactly one spawn required.", 2), 0);

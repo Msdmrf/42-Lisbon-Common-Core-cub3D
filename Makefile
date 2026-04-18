@@ -50,7 +50,10 @@ SRC_FILES = main.c \
 			input.c \
 			game_loop.c \
 			render.c \
-			cleanup.c
+			cleanup.c \
+			validate_map_helpers.c \
+			raycast.c \
+			raycast_helpers.c
 
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJ = $(addprefix $(OBJ_DIR), $(SRC_FILES:.c=.o))

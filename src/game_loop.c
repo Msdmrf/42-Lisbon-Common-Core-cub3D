@@ -29,27 +29,13 @@ static int	can_move(t_game *game, double nx, double ny)
 static void	rotate_player(t_game *game)
 {
 	if (game->keys.left)
-	{
-		if (game->player.spawn_dir == 'N')
-			game->player.spawn_dir = 'W';
-		else if (game->player.spawn_dir == 'W')
-			game->player.spawn_dir = 'S';
-		else if (game->player.spawn_dir == 'S')
-			game->player.spawn_dir = 'E';
-		else
-			game->player.spawn_dir = 'N';
-	}
+		game->player.angle -= ROT_SPEED;
 	else if (game->keys.right)
-	{
-		if (game->player.spawn_dir == 'N')
-			game->player.spawn_dir = 'E';
-		else if (game->player.spawn_dir == 'E')
-			game->player.spawn_dir = 'S';
-		else if (game->player.spawn_dir == 'S')
-			game->player.spawn_dir = 'W';
-		else
-			game->player.spawn_dir = 'N';
-	}
+		game->player.angle += ROT_SPEED;
+	if (game->player.angle < 0)
+		game->player.angle += 2 * M_PI;
+	if (game->player.angle >= 2 * M_PI)
+		game->player.angle -= 2 * M_PI;
 }
 
 static void	move_player(t_game *game)

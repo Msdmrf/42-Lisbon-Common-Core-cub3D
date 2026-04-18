@@ -2,10 +2,14 @@
 # define CUB3D_H
 
 # include <fcntl.h>
+# include <math.h>
 # include <X11/X.h>
 # include <X11/keysym.h>
 # include "../libft/includes/libft.h"
 # include "../minilibx-linux/mlx.h"
+
+//Math.h
+#define M_PI 3.14159265358979323846
 
 // Window
 # define WINDOW_TITLE "cub3D"
@@ -23,6 +27,11 @@
 # define MOVE_SPEED 0.1
 # define MOVE_TIMER 10
 # define PLAYER_RADIUS 0.15
+# define ROT_SPEED 0.05
+
+//FOV 60 degrees in radians
+# define FOV (M_PI / 3)
+# define RAY_STEP 0.05
 
 // Map characters
 # define CHAR_WALL  '1'
@@ -66,6 +75,7 @@ typedef struct s_player
 {
 	double	x;
 	double	y;
+	double	angle;
 	char	spawn_dir;
 }	t_player;
 
@@ -117,6 +127,7 @@ int		parse_map(t_game *game, char **lines, int start, int total);
 
 // validate_map.c
 int		validate_map(t_game *game);
+double	convert_angle(char spawn_dir);
 
 // validate_enclosure.c
 int		check_enclosure(t_game *game);
@@ -134,6 +145,15 @@ int		game_loop(t_game *game);
 
 // render.c
 void	render_frame(t_game *game);
+
+//put_pixel idk where to put it ngl
+void	put_pixel(t_game *game, int x, int y, int color);
+
+// raycast.c
+void	raycasting(t_game *game);
+
+//raycast_helpers.c
+double	calculate_ray_angle(t_game *game, double x);
 
 // cleanup.c
 void	free_game(t_game *game);
