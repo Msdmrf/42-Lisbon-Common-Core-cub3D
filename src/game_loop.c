@@ -28,10 +28,10 @@ static int	can_move(t_game *game, double nx, double ny)
 
 static void	rotate_player(t_game *game)
 {
-	if (game->keys.left)
-		game->player.angle -= ROT_SPEED;
-	else if (game->keys.right)
+	if (game->keys.right)
 		game->player.angle += ROT_SPEED;
+	else if (game->keys.left)
+		game->player.angle -= ROT_SPEED;
 	if (game->player.angle < 0)
 		game->player.angle += 2 * M_PI;
 	if (game->player.angle >= 2 * M_PI)
@@ -42,28 +42,50 @@ static void	move_player(t_game *game)
 {
 	double	nx;
 	double	ny;
+	double	move_x;
+	double	move_y;
 
 	nx = game->player.x;
 	ny = game->player.y;
+	move_x = 0;
+	move_y = 0;
 	if (game->keys.w)
-		ny -= MOVE_SPEED;
+	{
+		move_x += cos(game->player.angle) * MOVE_SPEED;
+		move_y += sin(game->player.angle) * MOVE_SPEED;
+	}
 	if (game->keys.s)
-		ny += MOVE_SPEED;
+	{
+		move_x -= cos(game->player.angle) * MOVE_SPEED;
+		move_y -= sin(game->player.angle) * MOVE_SPEED;
+	}
 	if (game->keys.a)
-		nx -= MOVE_SPEED;
+	{
+		move_x -= cos(game->player.angle + M_PI/2) * MOVE_SPEED;
+		move_y -= sin(game->player.angle + M_PI/2) * MOVE_SPEED;
+	}
 	if (game->keys.d)
-		nx += MOVE_SPEED;
-	rotate_player(game);
-	if (can_move(game, nx, game->player.y))
-		game->player.x = nx;
-	if (can_move(game, game->player.x, ny))
-		game->player.y = ny;
+	{
+		move_x += cos(game->player.angle + M_PI/2) * MOVE_SPEED;
+		move_y += sin(game->player.angle + M_PI/2) * MOVE_SPEED;
+	}
+	if (can_move(game, nx + move_x, ny + move_y))
+	{
+		game->player.x += move_x;
+		game->player.y += move_y;
+	}
+	else if (can_move(game, nx + move_x, ny))
+		game->player.x += move_x;
+	else if (can_move(game, nx, ny + move_y))
+		game->player.y += move_y;
 }
 
 int	game_loop(t_game *game)
 {
 	static int	timer;
 
+	rotate_player(game);
+	
 	if (timer++ >= MOVE_TIMER)
 	{
 		move_player(game);

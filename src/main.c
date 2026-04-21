@@ -49,7 +49,6 @@ int	main(int argc, char **argv)
 	if (!init_window(&game))
 		exit_game(&game, 1);
 	setup_hooks(&game);
-	render_frame(&game);
 	mlx_loop(game.mlx);
 	return (0);
 }

@@ -23,6 +23,13 @@
 # define COLOR_SPACE  0x000000
 # define COLOR_PLAYER 0xFF4500
 
+//Minimap
+#define MINIMAP_SIZE 150
+#define MINIMAP_TILE_SIZE 10
+#define MINIMAP_PADDING 10
+#define MINIMAP_X (WINDOW_WIDTH - MINIMAP_SIZE - MINIMAP_PADDING)
+#define MINIMAP_Y MINIMAP_PADDING  
+
 // Movement
 # define MOVE_SPEED 0.1
 # define MOVE_TIMER 10
@@ -55,7 +62,21 @@ typedef enum e_tex_id
 typedef struct s_tex
 {
 	char	*path;
+	void	*img;
+	char	*data;
+	int		width;
+	int		height;
+	int		bpp;
+	int		line_len;
+	int		endian;
 }	t_tex;
+
+typedef struct s_raycast_result
+{
+	double	distance;
+	double	hit_x;
+	double	hit_y;
+}	t_raycast_result;
 
 typedef struct s_rgb
 {
@@ -154,6 +175,8 @@ void	raycasting(t_game *game);
 
 //raycast_helpers.c
 double	calculate_ray_angle(t_game *game, double x);
+int		get_wall_direction(double hit_x, double hit_y);
+int		get_texture_pixel(t_game *game, int tex_id, int u, int v);
 
 // cleanup.c
 void	free_game(t_game *game);

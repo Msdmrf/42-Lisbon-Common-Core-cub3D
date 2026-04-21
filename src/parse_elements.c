@@ -20,13 +20,10 @@ static int	get_tex_id(char *line)
 static int	parse_texture(t_game *game, char *line, int id)
 {
 	char	*path;
+	int		len;
 
 	if (game->tex[id].path)
-	{
-		ft_putendl_fd("Error", 2);
-		ft_putendl_fd("Duplicate texture identifier.", 2);
-		return (0);
-	}
+		return (ft_putendl_fd("Error\nDuplicate texture identifier.", 2), 0);
 	line += 2;
 	while (*line == ' ' || *line == '\t')
 		line++;
@@ -39,6 +36,11 @@ static int	parse_texture(t_game *game, char *line, int id)
 	path = ft_strdup(line);
 	if (!path)
 		return (ft_putendl_fd("Error\nOut of memory.", 2), 0);
+	len = ft_strlen(path);
+	if (len > 0 && path[len - 1] == '\n')
+		path[len - 1] = '\0';
+	if (len > 1 && path[len - 2] == '\r')
+		path[len - 2] = '\0';
 	game->tex[id].path = path;
 	return (1);
 }
