@@ -1,0 +1,45 @@
+# Valgrind suppression file for MiniLibX + X11 / xcb internal noise.
+#
+# Suppresses leaks and uninitialized-value warnings that originate inside
+# libX11, libxcb, or MiniLibX itself. Any leak whose call stack includes a
+# cub3D function will still be reported normally.
+
+# ── Reachable leaks inside libX11 ────────────────────────────────────────────
+# Xlib intentionally keeps connection state, locale tables, atom caches, and
+# extension registries alive for the lifetime of the process. These show up
+# as "still reachable" blocks at exit. They are not freeable from user code.
+{
+   libX11_internal_leaks
+   Memcheck:Leak
+   ...
+   obj:*/libX11.so*
+}
+
+# ── Reachable leaks inside libxcb ────────────────────────────────────────────
+# libxcb (the X protocol transport beneath libX11) keeps similar internal
+# state alive for the duration of the connection.
+{
+   libxcb_internal_leaks
+   Memcheck:Leak
+   ...
+   obj:*/libxcb.so*
+}
+
+# ── Uninitialized-value warnings from X protocol writev() ────────────────────
+# libxcb and libX11 pass struct padding bytes through writev() that valgrind
+# flags as uninitialized. These are wire-format padding, not real data
+# uninitialization. Only fires under default Memcheck or --track-origins=yes.
+{
+   xcb_writev_padding
+   Memcheck:Param
+   writev(vector[0])
+   ...
+   obj:*/libxcb.so*
+}
+{
+   x11_writev_padding
+   Memcheck:Param
+   writev(vector[0])
+   ...
+   obj:*/libX11.so*
+}
