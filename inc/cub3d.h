@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/30 09:37:17 by migusant          #+#    #+#             */
+/*   Updated: 2026/05/05 15:46:26 by migusant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -9,36 +21,24 @@
 # include "../minilibx-linux/mlx.h"
 
 //Math.h
-#define M_PI 3.14159265358979323846
+# define M_PI 3.14159265358979323846
 
 // Window
 # define WINDOW_TITLE "cub3D"
-# define WINDOW_WIDTH 1920
-# define WINDOW_HEIGHT 1080
-# define TILE_SIZE 32
-
-// Colors (0x00RRGGBB)
-# define COLOR_WALL   0x808080
-# define COLOR_FLOOR  0x222222
-# define COLOR_SPACE  0x000000
-# define COLOR_PLAYER 0xFF4500
+# define WINDOW_WIDTH 1280
+# define WINDOW_HEIGHT 720
 
 //Minimap
-#define MINIMAP_SIZE 150
-#define MINIMAP_TILE_SIZE 10
-#define MINIMAP_PADDING 10
-#define MINIMAP_X (WINDOW_WIDTH - MINIMAP_SIZE - MINIMAP_PADDING)
-#define MINIMAP_Y MINIMAP_PADDING  
+# define MINIMAP_SIZE 150
+# define MINIMAP_PADDING 10
+# define MINIMAP_X 1120
+# define MINIMAP_Y MINIMAP_PADDING
+# define VIEWPORT_CELLS 5
 
 // Movement
-# define MOVE_SPEED 0.1
-# define MOVE_TIMER 10
+# define MOVE_SPEED 0.01
 # define PLAYER_RADIUS 0.15
 # define ROT_SPEED 0.05
-
-//FOV 60 degrees in radians
-# define FOV (M_PI / 3)
-# define RAY_STEP 0.05
 
 // Map characters
 # define CHAR_WALL  '1'
@@ -52,10 +52,10 @@
 // Texture index
 typedef enum e_tex_id
 {
-	tex_no = 0,
-	tex_so = 1,
-	tex_we = 2,
-	tex_ea = 3,
+	tex_NO = 0,
+	tex_SO = 1,
+	tex_WE = 2,
+	tex_EA = 3,
 	tex_count = 4
 }	t_tex_id;
 
@@ -70,13 +70,6 @@ typedef struct s_tex
 	int		line_len;
 	int		endian;
 }	t_tex;
-
-typedef struct s_raycast_result
-{
-	double	distance;
-	double	hit_x;
-	double	hit_y;
-}	t_raycast_result;
 
 typedef struct s_rgb
 {
@@ -94,11 +87,31 @@ typedef struct s_map
 
 typedef struct s_player
 {
-	double	x;
-	double	y;
-	double	angle;
+	double	pos_x;
+	double	pos_y;
+	double	dir_x;
+	double	dir_y;
+	double	plane_x;
+	double	plane_y;
 	char	spawn_dir;
 }	t_player;
+
+typedef struct s_ray
+{
+	double	dir_x;
+	double	dir_y;
+	int		map_x;
+	int		map_y;
+	double	delta_x;
+	double	delta_y;
+	double	side_x;
+	double	side_y;
+	int		step_x;
+	int		step_y;
+	int		side;
+	double	wall_dist;
+	double	wall_hit;
+}	t_ray;
 
 typedef struct s_img
 {
@@ -148,7 +161,9 @@ int		parse_map(t_game *game, char **lines, int start, int total);
 
 // validate_map.c
 int		validate_map(t_game *game);
-double	convert_angle(char spawn_dir);
+
+// validate_map_helpers.c
+void	init_player_vectors(t_player *player);
 
 // validate_enclosure.c
 int		check_enclosure(t_game *game);
@@ -167,19 +182,37 @@ int		game_loop(t_game *game);
 // render.c
 void	render_frame(t_game *game);
 
-//put_pixel idk where to put it ngl
 void	put_pixel(t_game *game, int x, int y, int color);
 
 // raycast.c
+int		is_wall(t_game *game, int map_x, int map_y);
+int		get_wall_tex(t_ray *ray);
 void	raycasting(t_game *game);
 
-//raycast_helpers.c
-double	calculate_ray_angle(t_game *game, double x);
-int		get_wall_direction(double hit_x, double hit_y);
+// dda.c
+void	init_ray_dir(t_ray *ray, t_game *game, int screen_x);
+void	init_dda_x(t_ray *ray, t_game *game);
+void	init_dda_y(t_ray *ray, t_game *game);
+void	cast_dda_ray(t_ray *ray, t_game *game);
+void	finish_ray(t_ray *ray, t_player *p);
+
+// column.c
+void	fill_background(t_game *game);
+void	draw_wall_strip(t_game *game, int x, t_ray *ray, int seg[3]);
+void	draw_column(t_game *game, int x, t_ray *ray);
+
+// raycast_helpers.c
 int		get_texture_pixel(t_game *game, int tex_id, int u, int v);
 
 // cleanup.c
 void	free_game(t_game *game);
+void	free_lines(char **lines, int count);
 void	exit_game(t_game *game, int code);
+
+// collision.c
+int		can_move(t_game *game, double nx, double ny);
+
+// minimap.c
+void	draw_minimap(t_game *game);
 
 #endif

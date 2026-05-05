@@ -1,26 +1,37 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_elements.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/31 09:58:30 by migusant          #+#    #+#             */
+/*   Updated: 2026/05/05 15:49:03 by migusant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
 static int	get_tex_id(char *line)
 {
 	if (ft_strncmp(line, "NO", 2) == 0
 		&& (line[2] == ' ' || line[2] == '\t'))
-		return (tex_no);
+		return (tex_NO);
 	if (ft_strncmp(line, "SO", 2) == 0
 		&& (line[2] == ' ' || line[2] == '\t'))
-		return (tex_so);
+		return (tex_SO);
 	if (ft_strncmp(line, "WE", 2) == 0
 		&& (line[2] == ' ' || line[2] == '\t'))
-		return (tex_we);
+		return (tex_WE);
 	if (ft_strncmp(line, "EA", 2) == 0
 		&& (line[2] == ' ' || line[2] == '\t'))
-		return (tex_ea);
+		return (tex_EA);
 	return (-1);
 }
 
 static int	parse_texture(t_game *game, char *line, int id)
 {
 	char	*path;
-	int		len;
 
 	if (game->tex[id].path)
 		return (ft_putendl_fd("Error\nDuplicate texture identifier.", 2), 0);
@@ -36,11 +47,6 @@ static int	parse_texture(t_game *game, char *line, int id)
 	path = ft_strdup(line);
 	if (!path)
 		return (ft_putendl_fd("Error\nOut of memory.", 2), 0);
-	len = ft_strlen(path);
-	if (len > 0 && path[len - 1] == '\n')
-		path[len - 1] = '\0';
-	if (len > 1 && path[len - 2] == '\r')
-		path[len - 2] = '\0';
 	game->tex[id].path = path;
 	return (1);
 }

@@ -1,4 +1,16 @@
 # **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2026/03/30 09:36:39 by migusant          #+#    #+#              #
+#    Updated: 2026/05/05 15:45:11 by migusant         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+# **************************************************************************** #
 #                              PROJECT SETTINGS                                #
 # **************************************************************************** #
 
@@ -11,7 +23,7 @@ MINILIBX = minilibx-linux/libmlx.a
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -O3
 MLX_FLAGS = -lm -lX11 -lXext
 RM = rm -f
 
@@ -53,7 +65,11 @@ SRC_FILES = main.c \
 			cleanup.c \
 			validate_map_helpers.c \
 			raycast.c \
-			raycast_helpers.c
+			raycast_helpers.c \
+			dda.c \
+			column.c \
+			collision.c \
+			minimap.c
 
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJ = $(addprefix $(OBJ_DIR), $(SRC_FILES:.c=.o))
@@ -63,6 +79,13 @@ OBJ = $(addprefix $(OBJ_DIR), $(SRC_FILES:.c=.o))
 # **************************************************************************** #
 
 all: $(LIBFT) $(MINILIBX) $(NAME)
+
+MAP ?= maps/example_1.cub
+
+v: all
+	@clear && valgrind --leak-check=full --show-leak-kinds=all \
+		--track-fds=yes --track-origins=yes \
+		--suppressions=$(shell pwd)/mlx.supp -s ./$(NAME) $(MAP)
 
 $(LIBFT):
 	@echo "$(YELLOW)Building libft...$(RESET)"
@@ -103,4 +126,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all v clean fclean re

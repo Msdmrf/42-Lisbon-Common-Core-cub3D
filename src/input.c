@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   input.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/06 16:15:06 by migusant          #+#    #+#             */
+/*   Updated: 2026/05/05 15:47:36 by migusant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
 int	handle_keypress(int keysym, t_game *game)
@@ -5,7 +17,7 @@ int	handle_keypress(int keysym, t_game *game)
 	if (keysym == XK_Escape)
 		close_game(game);
 	if (keysym == XK_w || keysym == XK_W)
-    	game->keys.w = 1;
+		game->keys.w = 1;
 	if (keysym == XK_a || keysym == XK_A)
 		game->keys.a = 1;
 	if (keysym == XK_s || keysym == XK_S)
@@ -21,10 +33,8 @@ int	handle_keypress(int keysym, t_game *game)
 
 int	handle_keyrelease(int keysym, t_game *game)
 {
-	if (keysym == XK_w)
-		game->keys.w = 0;
 	if (keysym == XK_w || keysym == XK_W)
-    	game->keys.w = 0;
+		game->keys.w = 0;
 	if (keysym == XK_a || keysym == XK_A)
 		game->keys.a = 0;
 	if (keysym == XK_s || keysym == XK_S)

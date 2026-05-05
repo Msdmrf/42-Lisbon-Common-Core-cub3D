@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_file.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/31 09:58:06 by migusant          #+#    #+#             */
+/*   Updated: 2026/05/05 15:49:27 by migusant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
 static int	count_lines(char *path)
@@ -21,13 +33,24 @@ static int	count_lines(char *path)
 	return (count);
 }
 
+static void	strip_line(char *line)
+{
+	char	*end;
+
+	end = ft_strchr(line, '\n');
+	if (end)
+		*end = '\0';
+	end = line + ft_strlen(line);
+	while (end > line && (end[-1] == '\r' || end[-1] == ' ' || end[-1] == '\t'))
+		*--end = '\0';
+}
+
 static char	**read_file_lines(char *path, int count)
 {
 	char	**lines;
 	int		fd;
 	int		i;
 	char	*line;
-	char	*nl;
 
 	lines = (char **)malloc(sizeof(char *) * (count + 1));
 	if (!lines)
@@ -39,9 +62,7 @@ static char	**read_file_lines(char *path, int count)
 	line = get_next_line(fd);
 	while (line && i < count)
 	{
-		nl = ft_strchr(line, '\n');
-		if (nl)
-			*nl = '\0';
+		strip_line(line);
 		lines[i++] = line;
 		line = get_next_line(fd);
 	}
@@ -74,21 +95,6 @@ static int	find_map_start(char **lines, int count)
 		i++;
 	}
 	return (-1);
-}
-
-static void	free_lines(char **lines, int count)
-{
-	int	i;
-
-	if (!lines)
-		return ;
-	i = 0;
-	while (i < count && lines[i])
-	{
-		free(lines[i]);
-		i++;
-	}
-	free(lines);
 }
 
 int	parse_cub_file(t_game *game, char *path)

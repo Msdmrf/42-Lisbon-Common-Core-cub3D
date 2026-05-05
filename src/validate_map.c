@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   validate_map.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/31 11:02:27 by migusant          #+#    #+#             */
+/*   Updated: 2026/05/05 15:52:11 by migusant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
 static int	is_valid_map_char(char c)
@@ -47,10 +59,10 @@ static int	check_player_spawn(t_game *game)
 			if (ft_strchr("NSEW", game->map.grid[i][j]))
 			{
 				count++;
-				game->player.x = j + 0.5;
-				game->player.y = i + 0.5;
+				game->player.pos_x = j + 0.5;
+				game->player.pos_y = i + 0.5;
 				game->player.spawn_dir = game->map.grid[i][j];
-				game->player.angle = convert_angle(game->player.spawn_dir);
+				init_player_vectors(&game->player);
 			}
 			j++;
 		}

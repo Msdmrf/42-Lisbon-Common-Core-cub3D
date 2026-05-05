@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/06 16:16:53 by migusant          #+#    #+#             */
+/*   Updated: 2026/05/05 15:46:57 by migusant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
 static void	free_map_grid(t_game *game)
@@ -32,6 +44,21 @@ static void	free_textures(t_game *game)
 	}
 }
 
+void	free_lines(char **lines, int count)
+{
+	int	i;
+
+	if (!lines)
+		return ;
+	i = 0;
+	while (i < count && lines[i])
+	{
+		free(lines[i]);
+		i++;
+	}
+	free(lines);
+}
+
 void	free_game(t_game *game)
 {
 	free_map_grid(game);
@@ -40,6 +67,18 @@ void	free_game(t_game *game)
 
 void	exit_game(t_game *game, int code)
 {
+	int	i;
+
+	i = 0;
+	while (i < tex_count)
+	{
+		if (game->tex[i].img)
+		{
+			mlx_destroy_image(game->mlx, game->tex[i].img);
+			game->tex[i].img = NULL;
+		}
+		i++;
+	}
 	if (game->img.ptr)
 		mlx_destroy_image(game->mlx, game->img.ptr);
 	if (game->win)
