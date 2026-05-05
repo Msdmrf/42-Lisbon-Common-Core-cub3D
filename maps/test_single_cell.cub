@@ -1,0 +1,9 @@
+NO ./maps/north.xpm
+SO ./maps/south.xpm
+WE ./maps/west.xpm
+EA ./maps/east.xpm
+
+F 0,0,0
+C 0,0,0
+
+1N1

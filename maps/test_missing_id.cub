@@ -1,0 +1,12 @@
+SO ./maps/south.xpm
+WE ./maps/west.xpm
+EA ./maps/east.xpm
+
+F 0,0,0
+C 0,0,0
+
+11111
+1S001
+10101
+10001
+11111
