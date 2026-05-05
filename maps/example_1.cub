@@ -1,7 +1,7 @@
-NO ./north.xpm
-SO ./south.xpm
-WE ./west.xpm
-EA ./east.xpm
+NO ./maps/north.xpm
+SO ./maps/south.xpm
+WE ./maps/west.xpm
+EA ./maps/east.xpm
 
 F 0,0,0
 C 0,0,0
